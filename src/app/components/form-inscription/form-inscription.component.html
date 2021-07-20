@@ -1,0 +1,468 @@
+<div>
+  <div>
+    <img src="assets/BANNER.webp" alt="WebP rules.">
+    <form [formGroup]="user" class="mt-5 container">
+
+      <div class="form-group row">
+        <div class="col-sm-6 row">
+          <label class="col-sm-5 col-form-label" for="first_name" required>Nombres :</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="first_name" formControlName="first_name" required>
+            <div
+              *ngIf="user.controls['first_name'].invalid && (user.controls['first_name'].dirty || user.controls['first_name'].touched)"
+              class="alert alert-danger">
+              <div *ngIf="user.controls['first_name'].errors.required">
+                Nombres es requerido.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 row">
+          <label class="col-sm-5 col-form-label" for="last_name">Apellidos</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="last_name" formControlName="last_name" required>
+            <div
+              *ngIf="user.controls['last_name'].invalid && (user.controls['last_name'].dirty || user.controls['last_name'].touched)"
+              class="alert alert-danger">
+              <div *ngIf="user.controls['last_name'].errors.required">
+                Apellidos es requerido.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <div class="col-sm-6 row">
+          <label *ngIf="!user.controls['isForeign'].value" class="col-sm-5 col-form-label" for="rut">Rut:</label>
+
+          <div *ngIf="!user.controls['isForeign'].value" class="col-sm-6">
+            <input type="text" class="form-control" id="rut" formControlName="rut"
+              (keyup)="checkRut($event.target.value)" maxlength="10" required>
+            <div *ngIf="user.controls['rut'].invalid && (user.controls['rut'].dirty || user.controls['rut'].touched)"
+              class="alert alert-danger">
+              <div *ngIf="user.controls['rut'].errors.required">
+                Rut es requerido.
+              </div>
+              <div *ngIf="user.controls['rut'].errors.pattern">
+                Formato invalido.
+              </div>
+              <div *ngIf="user.controls['rut'].errors.minlength">
+                El largo mínimo es de 9 caracteres
+              </div>
+              <div *ngIf="user.controls['rut'].invalid">
+                Formato invalido.
+              </div>
+
+            </div>
+          </div>
+
+
+          <label *ngIf="user.controls['isForeign'].value" class="col-sm-5 col-form-label" for="rut">Pasaporte:</label>
+          <div *ngIf="user.controls['isForeign'].value" class="col-sm-6">
+            <input type="text" class="form-control" id="rut" formControlName="rut" required>
+            <div *ngIf="user.controls['rut'].invalid && (user.controls['rut'].dirty || user.controls['rut'].touched)"
+              class="alert alert-danger">
+              <div *ngIf="user.controls['rut'].errors.required">
+                Este campo es requerido.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 row">
+          <mat-checkbox class="col-sm-6" id="isForeign" formControlName="isForeign" class="col-sm-3" [checked]="1"
+            value="1">No tengo
+            Rut chileno </mat-checkbox>
+        </div>
+
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-6 row">
+          <label class="col-sm-5 col-form-label" for="birthday">Fecha de nacimiento:</label>
+          <div class="col-sm-6">
+            <input (change)="formatFromDate($event.target.value)" class="form-control" matInput
+              [matDatepicker]="picker1" formControlName="birthday" autocomplete="off">
+            <div
+              *ngIf="user.controls['birthday'].invalid && (user.controls['birthday'].dirty || user.controls['birthday'].touched)"
+              class="alert alert-danger">
+              <div *ngIf="user.controls['birthday'].errors.required">
+                Fecha de nacimiento es requerida.
+              </div>
+              <div *ngIf="user.controls['birthday'].errors.incorrect">
+                Menor de Edad
+              </div>
+            </div>
+          </div>
+          <div>
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </div>
+          
+          <div  style="text-align: center !important;">
+            <p style="color:red !important ;font-size: 80%;" *ngIf="age()<18">Gracias por tu interés en apoyar el aprendizaje de un niño o niña.
+              <br />Lamentablemente, solo pueden postular personas mayores de edad al momento de la inscripción.
+            </p>
+          </div>
+        </div>
+        <div class="col-sm-6 row">
+          <label class="col-sm-5 col-form-label" for="phoneNumber">Telefóno:</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="phoneNumber" formControlName="phoneNumber" maxlength="15"
+              required>
+            <div
+              *ngIf="user.controls['phoneNumber'].invalid && (user.controls['phoneNumber'].dirty || user.controls['phoneNumber'].touched)"
+              class="alert alert-danger">
+              <div *ngIf="user.controls['phoneNumber'].errors.required">
+                Telefóno es requerido.
+              </div>
+              <div *ngIf="user.controls['phoneNumber'].errors.pattern">
+                Formato invalido.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="form-group row">
+        <div class="col-sm-6 row">
+          <label class="col-sm-5 col-form-label" for="email">Correo electrónico:</label>
+          <div class="col-sm-6">
+            <input  type="text" class="form-control" id="email" formControlName="email" required>
+            <div
+              *ngIf="user.controls['email'].invalid && (user.controls['email'].dirty || user.controls['email'].touched)"
+              class="alert alert-danger">
+              <div *ngIf="user.controls['email'].errors.required">
+                Email es requerido.
+              </div>
+              <div *ngIf="user.controls['email'].errors.pattern">
+                Formato invalido.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 row">
+          <label class="col-sm-5 col-form-label" for="emailRepeat">Confirmación correo:</label>
+          <div class="col-sm-6">
+            <input (change)="verificationEmail($event.target.value)" type="text" class="form-control" id="emailRepeat" formControlName="emailRepeat" required>
+            <div
+              *ngIf="user.controls['emailRepeat'].invalid && (user.controls['emailRepeat'].dirty || user.controls['emailRepeat'].touched)"
+              class="alert alert-danger">
+              <div *ngIf="user.controls['emailRepeat'].errors.required">
+                Email es requerido.
+              </div>
+              <div *ngIf="user.controls['emailRepeat'].errors.pattern">
+                Formato invalido.
+              </div>
+              <div *ngIf="user.controls['emailRepeat'].errors.incorrect">
+                Los correos deben ser iguales
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="form-group row">
+        <div class="col-sm-6 row">
+          <label class="col-sm-5 col-form-label" for="country">País:</label>
+          <div class="col-sm-6">
+            <mat-select class="form-control" matNativeControl id="country" name="country" formControlName="country">
+              <mat-option (click)="addCodeTelephone(country.callingCodes)" *ngFor="let country of countrys"
+                [value]="country.name">{{country.name}}</mat-option>
+            </mat-select>
+            <div
+              *ngIf="user.controls['country'].invalid && (user.controls['country'].dirty || user.controls['country'].touched)"
+              class="alert alert-danger">
+              <div *ngIf="user.controls['country'].errors.required">
+                El país es requerido.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 row">
+          <label class="col-sm-5 col-form-label" for="city">Ciudad:</label>
+          <div class="col-sm-6">
+            <input type="text" class="form-control" id="city" formControlName="city" required>
+            <div *ngIf="user.controls['city'].invalid && (user.controls['city'].dirty || user.controls['city'].touched)"
+              class="alert alert-danger">
+              <div *ngIf="user.controls['city'].errors.required">
+                Ciudad es requerida.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-6 row">
+          <label class="col-sm-5 col-form-label" for="occupation">Ocupación:</label>
+          <div class="col-sm-6">
+            <mat-select id="occupation" name="occupation" formControlName="occupation" class="form-control"
+              matNativeControl>
+              <mat-option value="">--Ninguno--</mat-option>
+              <mat-option value="No aplica">No aplica</mat-option>
+              <mat-option value="Dueña/o de casa">Dueña/o de casa</mat-option>
+              <mat-option value="Actuación">Actuación</mat-option>
+              <mat-option value="Administración">Administración</mat-option>
+              <mat-option value="Agronomía">Agronomía</mat-option>
+              <mat-option value="Antropología">Antropología</mat-option>
+              <mat-option value="Arquitectura">Arquitectura</mat-option>
+              <mat-option value="Artes">Artes</mat-option>
+              <mat-option value="Astronomía">Astronomía</mat-option>
+              <mat-option value="Auxiliar de vuelo">Auxiliar de vuelo</mat-option>
+              <mat-option value="Bachillerato">Bachillerato</mat-option>
+              <mat-option value="Bibliotecología">Bibliotecología</mat-option>
+              <mat-option value="Bio-Ingeniería">Bio-Ingeniería</mat-option>
+              <mat-option value="Biología">Biología</mat-option>
+              <mat-option value="Biología Marina">Biología Marina</mat-option>
+              <mat-option value="Bioquímica">Bioquímica</mat-option>
+              <mat-option value="Ciencias Políticas">Ciencias Políticas</mat-option>
+              <mat-option value="Cine">Cine</mat-option>
+              <mat-option value="College">College</mat-option>
+              <mat-option value="Computación e Informática">Computación e Informática</mat-option>
+              <mat-option value="Comunicación">Comunicación</mat-option>
+              <mat-option value="Construcción Civil">Construcción Civil</mat-option>
+              <mat-option value="Contador Auditor">Contador Auditor</mat-option>
+              <mat-option value="Derecho">Derecho</mat-option>
+              <mat-option value="Diseño">Diseño</mat-option>
+              <mat-option value="Educación de Párvulos">Educación de Párvulos</mat-option>
+              <mat-option value="Educación Diferencial">Educación Diferencial</mat-option>
+              <mat-option value="Educación Física">Educación Física</mat-option>
+              <mat-option value="Educación General Básica">Educación General Básica</mat-option>
+              <mat-option value="Enfermería">Enfermería</mat-option>
+              <mat-option value="Estadística">Estadística</mat-option>
+              <mat-option value="Estética">Estética</mat-option>
+              <mat-option value="Filosofía">Filosofía</mat-option>
+              <mat-option value="Física">Física</mat-option>
+              <mat-option value="Fonoaudiología">Fonoaudiología</mat-option>
+              <mat-option value="Fotografía">Fotografía</mat-option>
+              <mat-option value="Geografía">Geografía</mat-option>
+              <mat-option value="Geología">Geología</mat-option>
+              <mat-option value="Historia">Historia</mat-option>
+              <mat-option value="Ingeniería">Ingeniería</mat-option>
+              <mat-option value="Kinesiología">Kinesiología</mat-option>
+              <mat-option value="Letras y Literatura">Letras y Literatura</mat-option>
+              <mat-option value="Matemática">Matemática</mat-option>
+              <mat-option value="Medicina">Medicina</mat-option>
+              <mat-option value="Medicina Veterinaria">Medicina Veterinaria</mat-option>
+              <mat-option value="Música">Música</mat-option>
+              <mat-option value="Nutrición">Nutrición</mat-option>
+              <mat-option value="Obstetricia">Obstetricia</mat-option>
+              <mat-option value="Odontología">Odontología</mat-option>
+              <mat-option value="Pedagogía en Educación Media">Pedagogía en Educación Media</mat-option>
+              <mat-option value="Pedagogía en Inglés">Pedagogía en Inglés</mat-option>
+              <mat-option value="Pedagogía en Matemáticas">Pedagogía en Matemáticas</mat-option>
+              <mat-option value="Pedagogía en Música">Pedagogía en Música</mat-option>
+              <mat-option value="Periodismo">Periodismo</mat-option>
+              <mat-option value="Psicología">Psicología</mat-option>
+              <mat-option value="Psicopedagogía">Psicopedagogía</mat-option>
+              <mat-option value="Publicidad">Publicidad</mat-option>
+              <mat-option value="Química">Química</mat-option>
+              <mat-option value="Química y Farmacia">Química y Farmacia</mat-option>
+              <mat-option value="Relaciones Públicas">Relaciones Públicas</mat-option>
+              <mat-option value="Religión">Religión</mat-option>
+              <mat-option value="Sociología">Sociología</mat-option>
+              <mat-option value="Teatro">Teatro</mat-option>
+              <mat-option value="Técnico agrícola">Técnico agrícola</mat-option>
+              <mat-option value="Telecomunicaciones">Telecomunicaciones</mat-option>
+              <mat-option value="Teología">Teología</mat-option>
+              <mat-option value="Terapia Ocupacional">Terapia Ocupacional</mat-option>
+              <mat-option value="Topografía">Topografía</mat-option>
+              <mat-option value="Trabajo Social">Trabajo Social</mat-option>
+              <mat-option value="Traducción">Traducción</mat-option>
+              <mat-option value="Turismo - Hotelería">Turismo - Hotelería</mat-option>
+              <mat-option value="Otra">Otra</mat-option>
+            </mat-select>
+            <div
+              *ngIf="user.controls['occupation'].invalid && (user.controls['occupation'].dirty || user.controls['occupation'].touched)"
+              class="alert alert-danger">
+              <div *ngIf="user.controls['occupation'].errors.required">
+                Ocupación es requerida.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 row">
+          <label *ngIf="user.controls['occupation'].value=='Otra'" class="col-sm-5 col-form-label"
+            for="otherOccupation">Otra ocupación:</label>
+          <div *ngIf="user.controls['occupation'].value=='Otra'" class="col-sm-6">
+            <input type="text" class="form-control" id="otherOccupation" formControlName="otherOccupation" required>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-6 row">
+          <label class="col-sm-5 col-form-label" for="studyHouse">Casa de estudio:</label>
+          <div class="col-sm-6">
+            <mat-select id="studyHouse" name="studyHouse" formControlName="studyHouse" class="form-control"
+              matNativeControl>
+              <mat-option value="">--Ninguno--</mat-option>
+              <mat-option value="No Aplica">No Aplica</mat-option>
+              <mat-option value="Fuerzas Armadas y de Orden">Fuerzas Armadas y de Orden</mat-option>
+              <mat-option value="DUOC UC">DUOC UC</mat-option>
+              <mat-option value="INACAP">INACAP</mat-option>
+              <mat-option value="UCINF">UCINF</mat-option>
+              <mat-option value="UMCE">UMCE</mat-option>
+              <mat-option value="UNIACC">UNIACC</mat-option>
+              <mat-option value="UNICIT">UNICIT</mat-option>
+              <mat-option value="Universidad Adolfo Ibánez">Universidad Adolfo Ibánez</mat-option>
+              <mat-option value="Universidad Adventista de Chile">Universidad Adventista de Chile</mat-option>
+              <mat-option value="Universidad Alberto Hurtado">Universidad Alberto Hurtado</mat-option>
+              <mat-option value="Universidad Andrés Bello">Universidad Andrés Bello</mat-option>
+              <mat-option value="Universidad de Aconcagua">Universidad de Aconcagua</mat-option>
+              <mat-option value="Universidad Arcis">Universidad Arcis</mat-option>
+              <mat-option value="Universidad Arturo Prat">Universidad Arturo Prat</mat-option>
+              <mat-option value="Universidad Austral de Chile">Universidad Austral de Chile</mat-option>
+              <mat-option value="Universidad Autónoma de Chile">Universidad Autónoma de Chile</mat-option>
+              <mat-option value="Universidad Bernardo O&#39;higgins">Universidad Bernardo O&#39;higgins</mat-option>
+              <mat-option value="Universidad Bolivariana">Universidad Bolivariana</mat-option>
+              <mat-option value="Universidad Católica de Chile">Universidad Católica de Chile</mat-option>
+              <mat-option value="Universidad Católica de la Santísima Concepción">Universidad Católica de la Santísima
+                Concepción</mat-option>
+              <mat-option value="Universidad Católica de Temuco">Universidad Católica de Temuco</mat-option>
+              <mat-option value="Universidad Católica de Valparaíso">Universidad Católica de Valparaíso</mat-option>
+              <mat-option value="Universidad Católica del Norte">Universidad Católica del Norte</mat-option>
+              <mat-option value="Universidad Católica del Maule">Universidad Católica del Maule</mat-option>
+              <mat-option value="Universidad Católica Silva Henriquez">Universidad Católica Silva Henriquez</mat-option>
+              <mat-option value="Universidad Central de Chile">Universidad Central de Chile</mat-option>
+              <mat-option value="Universidad de Antofagasta">Universidad de Antofagasta</mat-option>
+              <mat-option value="Universidad de Atacama">Universidad de Atacama</mat-option>
+              <mat-option value="Universidad de Chile">Universidad de Chile</mat-option>
+              <mat-option value="Universidad de Concepción">Universidad de Concepción</mat-option>
+              <mat-option value="Universidad de La Frontera">Universidad de La Frontera</mat-option>
+              <mat-option value="Universidad de La Serena">Universidad de La Serena</mat-option>
+              <mat-option value="Universidad de Las Américas">Universidad de Las Américas</mat-option>
+              <mat-option value="Universidad de Los Andes">Universidad de Los Andes</mat-option>
+              <mat-option value="Universidad de Los Lagos">Universidad de Los Lagos</mat-option>
+              <mat-option value="Universidad de Magallanes">Universidad de Magallanes</mat-option>
+              <mat-option value="Universidad de Playa Ancha">Universidad de Playa Ancha</mat-option>
+              <mat-option value="Universidad de Talca">Universidad de Talca</mat-option>
+              <mat-option value="Universidad de Tarapacá">Universidad de Tarapacá</mat-option>
+              <mat-option value="Universidad de Valparaiso">Universidad de Valparaiso</mat-option>
+              <mat-option value="Universidad del Bio-Bio">Universidad del Bio-Bio</mat-option>
+              <mat-option value="Universidad del Desarrollo">Universidad del Desarrollo</mat-option>
+              <mat-option value="Universidad del Pacífico">Universidad del Pacífico</mat-option>
+              <mat-option value="Universidad Diego Portales">Universidad Diego Portales</mat-option>
+              <mat-option value="Universidad Finis Terrae">Universidad Finis Terrae</mat-option>
+              <mat-option value="Universidad Gabriela Mistral">Universidad Gabriela Mistral</mat-option>
+              <mat-option value="Universidad Internacional SEK">Universidad Internacional SEK</mat-option>
+              <mat-option value="Universidad José Santos Ossa">Universidad José Santos Ossa</mat-option>
+              <mat-option value="Universidad La República">Universidad La República</mat-option>
+              <mat-option value="Universidad Mariano Egaña">Universidad Mariano Egaña</mat-option>
+              <mat-option value="Universidad Marítima de Chile">Universidad Marítima de Chile</mat-option>
+              <mat-option value="Universidad Mayor">Universidad Mayor</mat-option>
+              <mat-option value="Universidad Miguel de Cervantes">Universidad Miguel de Cervantes</mat-option>
+              <mat-option value="Universidad San Sebastián">Universidad San Sebastián</mat-option>
+              <mat-option value="Universidad Santo Tomás">Universidad Santo Tomás</mat-option>
+              <mat-option value="Universidad Técnica Federico Santa María">Universidad Técnica Federico Santa María
+              </mat-option>
+              <mat-option value="Universidad Vicente Perez Rosales">Universidad Vicente Perez Rosales</mat-option>
+              <mat-option value="Universidad Viña del Mar">Universidad Viña del Mar</mat-option>
+              <mat-option value="USACH">USACH</mat-option>
+              <mat-option value="UTEM">UTEM</mat-option>
+              <mat-option value="Otra">Otra</mat-option>
+            </mat-select>
+            <div
+              *ngIf="user.controls['studyHouse'].invalid && (user.controls['studyHouse'].dirty || user.controls['studyHouse'].touched)"
+              class="alert alert-danger">
+              <div *ngIf="user.controls['studyHouse'].errors.required">
+                  Casa de estudio es requerida.
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-6 row">
+          <label *ngIf="user.controls['studyHouse'].value=='Otra'" class="col-sm-5 col-form-label"
+            for="otherStudyHouse">Otra casa de estudio:</label>
+          <div *ngIf="user.controls['studyHouse'].value=='Otra'" class="col-sm-6">
+            <input type="text" class="form-control" id="otherStudyHouse" formControlName="otherStudyHouse" required>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <mat-checkbox id="hasPreviousExperience" formControlName="hasPreviousExperience" class="col-sm-5"
+          value="hasPreviousExperience">Si tienes experiencia previa en educación, marca esta casilla </mat-checkbox>
+
+        <!--         <label *ngIf="user.controls['hasPreviousExperience'].value" class="col-sm-2 col-form-label"
+          for="previousExperience">Cuéntanos brevemente tu experiencia::</label> -->
+        <div class="col-sm-10" *ngIf="user.controls['hasPreviousExperience'].value">
+          <textarea type="text" class="form-control" id="previousExperience"
+            placeholder="Cuéntanos brevemente tu experiencia..." formControlName="previousExperience"
+            required></textarea>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-6 col-form-label" for="reasonForAplication">¿Por qué quieres postular al proyecto de
+          Tutorías Letra Libre 2021?</label>
+        <div class="col-sm-10">
+          <textarea class="form-control" type="text" id="reasonForAplication" placeholder=""
+            formControlName="reasonForAplication" required rows="2"></textarea>
+          <div
+            *ngIf="user.controls['reasonForAplication'].invalid && (user.controls['reasonForAplication'].dirty || user.controls['reasonForAplication'].touched)"
+            class="alert alert-danger">
+            <div *ngIf="user.controls['reasonForAplication'].errors.required">
+              El motivo de la postulación es requerido.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-2 col-form-label" for="candidateOrigin">¿Cómo te enteraste de las tutorías?:</label>
+        <div class="col-sm-3">
+          <mat-select id="candidateOrigin" name="candidateOrigin" formControlName="candidateOrigin" class="form-control" matNativeControl>
+            <mat-option value="">--Ninguno--</mat-option>
+            <mat-option value="Me llegó por Whatsapp">Me llegó por Whatsapp</mat-option>
+            <mat-option value="Instagram">Instagram</mat-option>
+            <mat-option value="Facebook">Facebook</mat-option>
+            <mat-option value="Twitter">Twitter</mat-option>
+            <mat-option value="Prensa">Prensa</mat-option>
+            <mat-option value="Radio - TV">Radio - TV</mat-option>
+            <mat-option value="Me contó un amigo o familiar">Me contó un amigo o familiar</mat-option>
+            <mat-option value="Otro">Otro</mat-option>
+          </mat-select>
+          <div
+            *ngIf="user.controls['candidateOrigin'].invalid && (user.controls['candidateOrigin'].dirty || user.controls['candidateOrigin'].touched)"
+            class="alert alert-danger">
+            <div *ngIf="user.controls['candidateOrigin'].errors.required">
+              El origen de como te enteraste es requerido.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-group row">
+        <label for="applicationCommitment" class="headCompromise col-sm-12 col-form-label ml-2">Al postular a Letra
+          Libre:</label>
+
+        <p class="col-12 ml-2 ">Me comprometo a acompañar a una niña o un niño durante
+          el segundo semestre escolar, finalizando en diciembre
+          2021.<br /> <br />
+          Estoy dispuesto/a a enfrentar este desafío con compromiso, flexibilidad y motivación.<br /><br />
+          Mi motivación es que ningún niño o niña en Chile se quede sin aprender a leer y escribir. </p>
+        <mat-checkbox (keyup)="reviewCommitment()" id="applicationCommitment" formControlName="applicationCommitment" required class="col-sm-3 ml-2">Acepto</mat-checkbox>
+        <div
+          *ngIf="user.controls['applicationCommitment'].invalid && (user.controls['applicationCommitment'].dirty || user.controls['applicationCommitment'].touched)"
+          class="alert alert-danger">
+          <div *ngIf="user.controls['applicationCommitment'].errors.required">
+            Debes aceptar para poder inscribirte.
+          </div>
+          <div *ngIf="user.controls['applicationCommitment'].errors.incorrect">
+            Debes aceptar para poder inscribirte.
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <button (click)=submit() class="btn btn-success" [disabled]="!user.valid" >Guardar</button>
+      </div>
+
+    </form>
+
+   
+  </div>
+
+  
+</div>

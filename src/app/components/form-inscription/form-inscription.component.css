@@ -1,0 +1,22 @@
+.headCompromise {
+    text-decoration: underline #FF8800 3.5px;
+    /* Bajo un poco la linea para que no se corte por la p */
+    text-underline-offset: 5px;
+}
+
+img {
+    margin-top: 26px;
+    width: 100%;
+}
+
+/* icono de datepicker */
+
+mat-datepicker-toggle {
+    color: #003591 !important;
+}
+
+/* cuadrado checkbox */
+
+::ng-deep .mat-checkbox-frame {
+    border-color: #003591 !important
+}
