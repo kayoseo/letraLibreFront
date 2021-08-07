@@ -12,12 +12,16 @@ import localeEs from '@angular/common/locales/es';
 import { HashLocationStrategy, LocationStrategy,registerLocaleData } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { CalendlyComponent } from './components/calendly/calendly.component';
+import { FormInscriptionBusinessComponent } from './components/form-inscription-business/form-inscription-business.component';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 registerLocaleData(localeEs,'es');
 @NgModule({
   declarations: [
     AppComponent,
     FormInscriptionComponent,
-    CalendlyComponent
+    CalendlyComponent,
+    FormInscriptionBusinessComponent,
+    NotFoundComponent
   ],
   imports: [
     BrowserModule,

@@ -59,7 +59,7 @@
 
           <label *ngIf="user.controls['isForeign'].value" class="col-sm-5 col-form-label" for="rut">Pasaporte:</label>
           <div *ngIf="user.controls['isForeign'].value" class="col-sm-6">
-            <input type="text" class="form-control" id="rut" formControlName="rut" >
+            <input type="text" class="form-control" id="rut" formControlName="rut">
             <div *ngIf="user.controls['rut'].invalid && (user.controls['rut'].dirty || user.controls['rut'].touched)"
               class="alert alert-danger">
               <div *ngIf="user.controls['rut'].errors.required">
@@ -97,9 +97,10 @@
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
             <mat-datepicker #picker1></mat-datepicker>
           </div>
-          
-          <div  style="text-align: center !important;">
-            <p style="color:red !important ;font-size: 80%;" *ngIf="age()<18">Gracias por tu interés en apoyar el aprendizaje de un niño o niña.
+
+          <div style="text-align: center !important;">
+            <p style="color:red !important ;font-size: 80%;" *ngIf="age()<18">Gracias por tu interés en apoyar el
+              aprendizaje de un niño o niña.
               <br />Lamentablemente, solo pueden postular personas mayores de edad al momento de la inscripción.
             </p>
           </div>
@@ -107,8 +108,8 @@
         <div class="col-sm-6 row">
           <label class="col-sm-5 col-form-label" for="phoneNumber">Telefóno:</label>
           <div class="col-sm-6">
-            <input type="text"  placeholder="+56" class="form-control" id="phoneNumber" formControlName="phoneNumber" maxlength="15"
-              required >
+            <input type="text" placeholder="+56" class="form-control" id="phoneNumber" formControlName="phoneNumber"
+              maxlength="15" required>
             <div
               *ngIf="user.controls['phoneNumber'].invalid && (user.controls['phoneNumber'].dirty || user.controls['phoneNumber'].touched || user.controls['phoneNumber'].errors.minlength)"
               class="alert alert-danger">
@@ -131,7 +132,7 @@
         <div class="col-sm-6 row">
           <label class="col-sm-5 col-form-label" for="email">Correo electrónico:</label>
           <div class="col-sm-6">
-            <input  type="text" class="form-control" id="email" formControlName="email" required>
+            <input type="text" class="form-control" id="email" formControlName="email" required>
             <div
               *ngIf="user.controls['email'].invalid && (user.controls['email'].dirty || user.controls['email'].touched)"
               class="alert alert-danger">
@@ -147,7 +148,9 @@
         <div class="col-sm-6 row">
           <label class="col-sm-5 col-form-label" for="emailRepeat">Confirmación correo:</label>
           <div class="col-sm-6">
-            <input (change)="verificationEmail($event.target.value)" type="text" class="form-control" id="emailRepeat" formControlName="emailRepeat" required onCopy="return false" onDrag="return false" onDrop="return false" onPaste="return false" autocomplete=off>
+            <input (change)="verificationEmail($event.target.value)" type="text" class="form-control" id="emailRepeat"
+              formControlName="emailRepeat" required onCopy="return false" onDrag="return false" onDrop="return false"
+              onPaste="return false" autocomplete=off>
             <div
               *ngIf="user.controls['emailRepeat'].invalid && (user.controls['emailRepeat'].dirty || user.controls['emailRepeat'].touched)"
               class="alert alert-danger">
@@ -290,7 +293,7 @@
           <label *ngIf="user.controls['occupation'].value=='Otra'" class="col-sm-5 col-form-label"
             for="otherOccupation">Otra ocupación:</label>
           <div *ngIf="user.controls['occupation'].value=='Otra'" class="col-sm-6">
-            <input type="text" class="form-control" id="otherOccupation" formControlName="otherOccupation" >
+            <input type="text" class="form-control" id="otherOccupation" formControlName="otherOccupation">
           </div>
         </div>
       </div>
@@ -371,7 +374,7 @@
               *ngIf="user.controls['studyHouse'].invalid && (user.controls['studyHouse'].dirty || user.controls['studyHouse'].touched)"
               class="alert alert-danger">
               <div *ngIf="user.controls['studyHouse'].errors.required">
-                  Casa de estudio es requerida.
+                Casa de estudio es requerida.
               </div>
             </div>
           </div>
@@ -380,7 +383,7 @@
           <label *ngIf="user.controls['studyHouse'].value=='Otra'" class="col-sm-5 col-form-label"
             for="otherStudyHouse">Otra casa de estudio:</label>
           <div *ngIf="user.controls['studyHouse'].value=='Otra'" class="col-sm-6">
-            <input type="text" class="form-control" id="otherStudyHouse" formControlName="otherStudyHouse" >
+            <input type="text" class="form-control" id="otherStudyHouse" formControlName="otherStudyHouse">
           </div>
         </div>
       </div>
@@ -390,11 +393,10 @@
           value="hasPreviousExperience">Si tienes experiencia previa en educación, marca esta casilla </mat-checkbox>
 
         <!--         <label *ngIf="user.controls['hasPreviousExperience'].value" class="col-sm-2 col-form-label"
-          for="previousExperience">Cuéntanos brevemente tu experiencia::</label> -->
+            for="previousExperience">Cuéntanos brevemente tu experiencia::</label> -->
         <div class="col-sm-10" *ngIf="user.controls['hasPreviousExperience'].value">
           <textarea type="text" class="form-control" id="previousExperience"
-            placeholder="Cuéntanos brevemente tu experiencia..." formControlName="previousExperience"
-            ></textarea>
+            placeholder="Cuéntanos brevemente tu experiencia..." formControlName="previousExperience"></textarea>
         </div>
       </div>
       <div class="form-group row">
@@ -415,7 +417,8 @@
       <div class="form-group row">
         <label class="col-sm-2 col-form-label" for="candidateOrigin">¿Cómo te enteraste de las tutorías?:</label>
         <div class="col-sm-3">
-          <mat-select id="candidateOrigin" name="candidateOrigin" formControlName="candidateOrigin" class="form-control" matNativeControl>
+          <mat-select id="candidateOrigin" name="candidateOrigin" formControlName="candidateOrigin" class="form-control"
+            matNativeControl>
             <mat-option value="">--Ninguno--</mat-option>
             <mat-option value="Me llegó por Whatsapp">Me llegó por Whatsapp</mat-option>
             <mat-option value="Instagram">Instagram</mat-option>
@@ -436,6 +439,41 @@
         </div>
       </div>
       <div class="form-group row">
+       
+          <label class="col-sm-7 col-form-label" for="entryGroup">¿Con qué grupo ingresas a Letra Libre?
+            (universidad/empresa / agrupación):</label>
+          <div class="col-sm-3">
+            <mat-select id="entryGroup" name="entryGroup" formControlName="entryGroup" class="form-control"
+              matNativeControl>
+              <mat-option value="">--Ninguno--</mat-option>
+              <mat-option value="Anglo American">Anglo American</mat-option>
+              <mat-option value="Barros y Errázuriz">Barros y Errázuriz</mat-option>
+              <mat-option value="WOM">WOM</mat-option>
+              <mat-option value="Consorcio">Consorcio</mat-option>
+              <mat-option value="Abinbev">Abinbev</mat-option>
+              <mat-option value="Bodegas San Francisco">Bodegas San Francisco</mat-option>
+              <mat-option value="Mapfre">Mapfre</mat-option>
+              <mat-option value="Evalueserve">Evalueserve</mat-option>
+              <mat-option value="Corporación Futrono">Corporación Futrono</mat-option>
+              <mat-option value="UDEC">UDEC</mat-option>
+              <mat-option value="UC Campus Villarica">UC Campus Villarica</mat-option>
+            </mat-select>
+          </div>
+   
+       
+      </div>
+      <div class="form-group row">
+        <label class="col-sm-7 col-form-label" for="relationshipEntryGroup">¿Cuál tu relación con el grupo?:</label>
+        <div class="col-sm-3">
+          <mat-select id="relationshipEntryGroup" name="relationshipEntryGroup" formControlName="relationshipEntryGroup" class="form-control"
+            matNativeControl>
+            <mat-option value="">--Ninguno--</mat-option>
+            <mat-option value="Funcionario">Funcionario</mat-option>
+            <mat-option value="Familiar/amigo de funcionario">Familiar/amigo de funcionario</mat-option>
+          </mat-select>
+        </div>
+      </div>
+      <div class="form-group row">
         <label for="applicationCommitment" class="headCompromise col-sm-12 col-form-label ml-2">Al postular a Letra
           Libre:</label>
 
@@ -444,7 +482,8 @@
           2021.<br /> <br />
           Estoy dispuesto/a a enfrentar este desafío con compromiso, flexibilidad y motivación.<br /><br />
           Mi motivación es que ningún niño o niña en Chile se quede sin aprender a leer y escribir. </p>
-        <mat-checkbox (keyup)="reviewCommitment()" id="applicationCommitment" formControlName="applicationCommitment" required class="col-sm-3 ml-2">Acepto</mat-checkbox>
+        <mat-checkbox (keyup)="reviewCommitment()" id="applicationCommitment" formControlName="applicationCommitment"
+          required class="col-sm-3 ml-2">Acepto</mat-checkbox>
         <div
           *ngIf="user.controls['applicationCommitment'].invalid && (user.controls['applicationCommitment'].dirty || user.controls['applicationCommitment'].touched)"
           class="alert alert-danger">
@@ -458,13 +497,13 @@
       </div>
 
       <div>
-        <button (click)=submit() class="btn btn-success" [disabled]="!user.valid" >Guardar</button>
+        <button (click)=submit() class="btn btn-success" [disabled]="!user.valid">Guardar</button>
       </div>
 
     </form>
 
-   
+
   </div>
 
-  
+
 </div>

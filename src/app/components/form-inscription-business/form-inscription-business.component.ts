@@ -9,11 +9,11 @@ import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
 
 @Component({
-  selector: 'app-form-inscription',
-  templateUrl: './form-inscription.component.html',
-  styleUrls: ['./form-inscription.component.css']
+  selector: 'app-form-inscription-business',
+  templateUrl: './form-inscription-business.component.html',
+  styleUrls: ['./form-inscription-business.component.css']
 })
-export class FormInscriptionComponent implements OnInit {
+export class FormInscriptionBusinessComponent implements OnInit {
   user: any;
   countrys: any;
 
@@ -22,7 +22,7 @@ export class FormInscriptionComponent implements OnInit {
     private _countryPhoneNumbersService: CountryPhoneNumbersService, private _salesforceService: SalesforceService) {
     var patternMail = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$";
     this.user = this.formBuilder.group({
-      oid: [ environment.oid],
+      oid: [environment.oid],
       first_name: ['', Validators.required],
       last_name: ['', Validators.required],
       email: ['', [Validators.required, Validators.pattern(patternMail)]],
@@ -43,14 +43,12 @@ export class FormInscriptionComponent implements OnInit {
       otherStudyHouse: [null],
       reasonForAplication: ["", Validators.required],
       candidateOrigin: [""],
-      applicationCommitment: [false, Validators.requiredTrue]
+      applicationCommitment: [false, Validators.requiredTrue],
+      entryGroup: [""],
+      relationshipEntryGroup:[""]
 
     });
-
-   
     this.countrys = [];
-
-
   }
 
 
@@ -58,12 +56,9 @@ export class FormInscriptionComponent implements OnInit {
     this._countryPhoneNumbersService.getCountrys().subscribe((result) => {
       this.countrys = result;
     });
-
-
   }
 
   checkRut(rut) {
-    console.log("rut" + rut);
     // Despejar Puntos
     var rut = this.user.controls['rut'].value;
     var valor = rut.replace('.', '');
@@ -119,8 +114,7 @@ export class FormInscriptionComponent implements OnInit {
   }
 
   addCodeTelephone(callingCodes) {
-    if(this.user.controls.phoneNumber.value=="")
-    {
+    if (this.user.controls.phoneNumber.value == "") {
       this.user.controls.phoneNumber.setValue("+" + callingCodes);
     }
   }
@@ -147,12 +141,11 @@ ya que o sino el datepicker la considera como invalida y guarda un null */
     var date = value.split('/');
     value = date[1] + "/" + date[0] + "/" + date[2];
     this.user.controls['birthday'].setValue(new Date(value));
-
   }
 
 
   verificationEmail(value) {
-   /*  value = this.user.controls.emailRepeat.value; */
+    /*  value = this.user.controls.emailRepeat.value; */
     var email = this.user.controls.email.value;
     if (value != email) {
       this.user.controls.emailRepeat.setErrors({ 'incorrect': true });
@@ -170,13 +163,13 @@ ya que o sino el datepicker la considera como invalida y guarda un null */
   }
 
   submit() {
-    
+
 
     let body = new URLSearchParams();
     //test
-    //body.set('oid', "00D2f0000008gFV");
+    body.set('oid', "00D2f0000008gFV");
     //produccion
-    body.set('oid', "00D5e000000HFMh");
+    /* body.set('oid', "00D5e000000HFMh"); */
 
     body.set('retURL', "http://www.letralibre.cl");
     body.set('first_name', this.user.value.first_name);
@@ -190,74 +183,77 @@ ya que o sino el datepicker la considera como invalida y guarda un null */
     body.set('recordType', "Tutor");
     body.set('submit', "Enviar");
     body.set('debug', "1");
-/*     body.set('debugEmail', "juanromanmontes@gmail.com"); */
+    //ultimos dos test
+    body.set('00N7h000003zNCf', this.user.value.entryGroup);
+    body.set('00N7h000003zND9', this.user.value.relationshipEntryGroup);
+    /*  body.set('debugEmail', "juanromanmontes@gmail.com"); */
 
 
     //no tengo rut chileno
     if (this.user.value.isForeign) {
       //test
-      /* body.set['00N2f000001Eimu'] = 1; */
+      body.set['00N2f000001Eimu'] = 1;
       //produccion
-      body.set('00N5e00000N8lnm', "1");
+      /* body.set('00N5e00000N8lnm', "1"); */
     }
     //test
-    //body.set('00N2f000001Eimp',this.user.value.rut );
+    body.set('00N2f000001Eimp', this.user.value.rut);
     //produccion
-    body.set('00N5e00000N8lnr', this.user.value.rut);
+    /* body.set('00N5e00000N8lnr', this.user.value.rut); */
 
     //test
-    // body.set('00N2f000001Eimz',this.user.value.birthday);
+    body.set('00N2f000001Eimz', moment(this.user.value.birthday).format("DD/MM/YYYY").toString());
     //produccion
-    body.set('00N5e00000N8lnh', moment(this.user.value.birthday).format("DD/MM/YYYY").toString());
+    /* body.set('00N5e00000N8lnh', moment(this.user.value.birthday).format("DD/MM/YYYY").toString()); */
 
     //test
-  /*   body.set('00N2f000001EinE', this.user.value.occupation); */
+    body.set('00N2f000001EinE', this.user.value.occupation);
     //produccion
-    body.set('00N5e00000N8lnn', this.user.value.occupation);
+    /* body.set('00N5e00000N8lnn', this.user.value.occupation); */
 
     if (this.user.value.otherOccupation != null) {
       //test
-      //body.set('00N2f000001EinJ',this.user.value.otherOccupation);
+      body.set('00N2f000001EinJ', this.user.value.otherOccupation);
       //produccion
-      body.set('00N5e00000N8lnq', this.user.value.otherOccupation);
+      /* body.set('00N5e00000N8lnq', this.user.value.otherOccupation); */
     }
 
     //test
-    //body.set('00N2f000001EinO',this.user.value.studyHouse ); 
+    body.set('00N2f000001EinO', this.user.value.studyHouse);
     //produccion
-    body.set('00N5e00000N8lna', this.user.value.studyHouse);
+    /* body.set('00N5e00000N8lna', this.user.value.studyHouse); */
 
     if (this.user.value.otherStudyHouse != null) {
       //test
-      //body.set('00N2f000001EinT',this.user.value.otherStudyHouse);
+      body.set('00N2f000001EinT', this.user.value.otherStudyHouse);
       //produccion
-      body.set('00N5e00000N8lnp', this.user.value.otherStudyHouse);
+      /* body.set('00N5e00000N8lnp', this.user.value.otherStudyHouse); */
     }
 
     if (this.user.value.hasPreviousExperience) {
       //test
-      //body.set('00N2f000001Eind',"1"); 
+      body.set('00N2f000001Eind', "1");
       //produccion
-      body.set('00N5e00000N8lns', "1");
+      /* body.set('00N5e00000N8lns', "1"); */
 
       //test
-      //body.set('00N2f000001EinY',this.user.value.previousExperience);
+      body.set('00N2f000001EinY', this.user.value.previousExperience);
       //produccion
-      body.set('00N5e00000N8lng', this.user.value.previousExperience);
+      /* body.set('00N5e00000N8lng', this.user.value.previousExperience); */
     }
 
     //test
-    //body.set('00N2f000001Eini',this.user.value.reasonForAplication);
+    body.set('00N2f000001Eini', this.user.value.reasonForAplication);
     //produccion
-    body.set('00N5e00000N8lnl', this.user.value.reasonForAplication);
+    /* body.set('00N5e00000N8lnl', this.user.value.reasonForAplication); */
 
 
 
     if (this.user.value.applicationCommitment) {
       //test
-      //body.set('00N2f000001Einn', "1");
+      body.set('00N2f000001Einn', "1");
       //produccion
-      body.set('00N5e00000N8lnb', "1");
+      /* body.set('00N5e00000N8lnb', "1"); */
     }
 
     this._salesforceService.saveVoluntary(body).subscribe((response) => {
@@ -266,7 +262,7 @@ ya que o sino el datepicker la considera como invalida y guarda un null */
       error => {
         console.log(error);
       });
-    this.router.navigate(['/agendamiento/' + this.user.value.first_name + ' ' + this.user.value.last_name + '/' + this.user.value.email + '/' + this.user.value.rut+'/'+this.user.value.phoneNumber]);
+    this.router.navigate(['/agendamiento/' + this.user.value.first_name + ' ' + this.user.value.last_name + '/' + this.user.value.email + '/' + this.user.value.rut + '/' + this.user.value.phoneNumber]);
   }
 
 }
