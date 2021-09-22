@@ -80,8 +80,7 @@
         <div class="col-sm-6 row">
           <label class="col-sm-5 col-form-label" for="birthday">Fecha de nacimiento:</label>
           <div class="col-sm-6">
-            <input (change)="formatFromDate($event.target.value)" class="form-control" matInput
-              [matDatepicker]="picker1" formControlName="birthday" autocomplete="off">
+            <input (keyup)="replaceGuion($event.target.value)" class="form-control" formControlName="birthday" autocomplete="off">
             <div
               *ngIf="user.controls['birthday'].invalid && (user.controls['birthday'].dirty || user.controls['birthday'].touched)"
               class="alert alert-danger">
@@ -91,12 +90,12 @@
               <div *ngIf="user.controls['birthday'].errors.incorrect">
                 Menor de Edad
               </div>
+              <div *ngIf="user.controls['birthday'].errors.invalido">
+                  Formato de fecha incorrecto. Ej: DD/MM/AAAA
+              </div>
             </div>
           </div>
-          <div>
-            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-            <mat-datepicker #picker1></mat-datepicker>
-          </div>
+         
           
           <div  style="text-align: center !important;">
             <p style="color:red !important ;font-size: 80%;" *ngIf="age()<18">Gracias por tu interés en apoyar el aprendizaje de un niño o niña.

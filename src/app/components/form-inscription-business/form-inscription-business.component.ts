@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { CalendlyComponent } from '../calendly/calendly.component';
 import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-form-inscription-business',
@@ -45,7 +46,7 @@ export class FormInscriptionBusinessComponent implements OnInit {
       candidateOrigin: [""],
       applicationCommitment: [false, Validators.requiredTrue],
       entryGroup: [""],
-      relationshipEntryGroup:[""]
+      relationshipEntryGroup: [""]
 
     });
     this.countrys = [];
@@ -122,9 +123,30 @@ export class FormInscriptionBusinessComponent implements OnInit {
   age() {
     var fecha = this.user.controls.birthday.value;
     var hoy = new Date();
-    var cumpleanos = new Date(fecha);
+    var fecha = fecha.split('/');
+    if (fecha[2]) {
+      if (fecha[2].length < 4 || fecha[2].length > 4) {
+        this.user.controls.birthday.setErrors({ 'invalido': true });
+        //asi evito que aparezca la otra validacion
+        return 18;
+      }
+    }
+    else {
+      this.user.controls.birthday.setErrors({ 'invalido': true });
+      //asi evito que aparezca la otra validacion
+      return 18;
+    }
+
+    var value = fecha[1] + "/" + fecha[0] + "/" + fecha[2];
+    var cumpleanos = new Date(value);
     var edad = hoy.getFullYear() - cumpleanos.getFullYear();
     var m = hoy.getMonth() - cumpleanos.getMonth();
+    console.log("cumpleaños", cumpleanos);
+    if (cumpleanos.toString() == "Invalid Date") {
+      this.user.controls.birthday.setErrors({ 'invalido': true });
+      //asi evito que aparezca la otra validacion
+      return 18;
+    }
 
     if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
       edad--;
@@ -141,6 +163,14 @@ ya que o sino el datepicker la considera como invalida y guarda un null */
     var date = value.split('/');
     value = date[1] + "/" + date[0] + "/" + date[2];
     this.user.controls['birthday'].setValue(new Date(value));
+  }
+
+  replaceGuion(value) {
+    if (value.length == 2 || value.length == 5) {
+      value = value + "/";
+    }
+    value = value.replace('-', '/');
+    this.user.controls['birthday'].setValue(value);
   }
 
 
@@ -166,10 +196,12 @@ ya que o sino el datepicker la considera como invalida y guarda un null */
 
 
     let body = new URLSearchParams();
+    //test nuevo
+    /*  body.set('oid', "00D7h000000GzV1"); */
     //test
-    body.set('oid', "00D2f0000008gFV");
+    /* body.set('oid', "00D2f0000008gFV"); */
     //produccion
-    /* body.set('oid', "00D5e000000HFMh"); */
+    body.set('oid', "00D5e000000HFMh");
 
     body.set('retURL', "http://www.letralibre.cl");
     body.set('first_name', this.user.value.first_name);
@@ -184,32 +216,40 @@ ya que o sino el datepicker la considera como invalida y guarda un null */
     body.set('submit', "Enviar");
     body.set('debug', "1");
     //ultimos dos test
-    body.set('00N7h000003zNCf', this.user.value.entryGroup);
-    body.set('00N7h000003zND9', this.user.value.relationshipEntryGroup);
-    /*  body.set('debugEmail', "juanromanmontes@gmail.com"); */
+    /* body.set('00N7h000003zNCf', this.user.value.entryGroup); */
+    //prod 00N5e00000Y3oPK
+    body.set('00N5e00000Y3oPK', this.user.value.entryGroup);
+    //prod
+    body.set('00N5e00000Y3oPL', this.user.value.relationshipEntryGroup);
+    //test
+    /* body.set('00N7h000003zND9', this.user.value.relationshipEntryGroup); */
+    body.set('debugEmail', "felipe.ferreira@letralibre.cl");
 
 
     //no tengo rut chileno
     if (this.user.value.isForeign) {
       //test
-      body.set['00N2f000001Eimu'] = 1;
+      /* body.set['00N2f000001Eimu'] = 1; */
       //produccion
-      /* body.set('00N5e00000N8lnm', "1"); */
+      body.set('00N5e00000N8lnm', "1");
     }
     //test
-    body.set('00N2f000001Eimp', this.user.value.rut);
+    /* body.set('00N2f000001Eimp', this.user.value.rut); */
     //produccion
-    /* body.set('00N5e00000N8lnr', this.user.value.rut); */
+    body.set('00N5e00000N8lnr', this.user.value.rut);
+
+    var fecha = this.user.value.birthday.split('/');
+    var value = fecha[1] + "/" + fecha[0] + "/" + fecha[2];
+    var cumpleanos = new Date(value);
+    //test
+    /* body.set('00N2f000001Eimz', moment(this.user.value.birthday).format("DD/MM/YYYY").toString()); */
+    //produccion
+    body.set('00N5e00000N8lnh', moment(cumpleanos).format("DD/MM/YYYY").toString());
 
     //test
-    body.set('00N2f000001Eimz', moment(this.user.value.birthday).format("DD/MM/YYYY").toString());
+    /* body.set('00N2f000001EinE', this.user.value.occupation); */
     //produccion
-    /* body.set('00N5e00000N8lnh', moment(this.user.value.birthday).format("DD/MM/YYYY").toString()); */
-
-    //test
-    body.set('00N2f000001EinE', this.user.value.occupation);
-    //produccion
-    /* body.set('00N5e00000N8lnn', this.user.value.occupation); */
+    body.set('00N5e00000N8lnn', this.user.value.occupation);
 
     if (this.user.value.otherOccupation != null) {
       //test
@@ -219,9 +259,9 @@ ya que o sino el datepicker la considera como invalida y guarda un null */
     }
 
     //test
-    body.set('00N2f000001EinO', this.user.value.studyHouse);
+    /* body.set('00N2f000001EinO', this.user.value.studyHouse); */
     //produccion
-    /* body.set('00N5e00000N8lna', this.user.value.studyHouse); */
+    body.set('00N5e00000N8lna', this.user.value.studyHouse);
 
     if (this.user.value.otherStudyHouse != null) {
       //test
@@ -232,37 +272,50 @@ ya que o sino el datepicker la considera como invalida y guarda un null */
 
     if (this.user.value.hasPreviousExperience) {
       //test
-      body.set('00N2f000001Eind', "1");
+      /* body.set('00N2f000001Eind', "1"); */
       //produccion
-      /* body.set('00N5e00000N8lns', "1"); */
+      body.set('00N5e00000N8lns', "1");
 
       //test
-      body.set('00N2f000001EinY', this.user.value.previousExperience);
+      /*  body.set('00N2f000001EinY', this.user.value.previousExperience); */
       //produccion
-      /* body.set('00N5e00000N8lng', this.user.value.previousExperience); */
+      body.set('00N5e00000N8lng', this.user.value.previousExperience);
     }
 
     //test
-    body.set('00N2f000001Eini', this.user.value.reasonForAplication);
+    /* body.set('00N2f000001Eini', this.user.value.reasonForAplication); */
     //produccion
-    /* body.set('00N5e00000N8lnl', this.user.value.reasonForAplication); */
+    body.set('00N5e00000N8lnl', this.user.value.reasonForAplication);
 
 
 
     if (this.user.value.applicationCommitment) {
+      //test nuevo
+      body.set('00N5e00000N8lnd', "1");
       //test
-      body.set('00N2f000001Einn', "1");
+      /*  body.set('00N2f000001Einn', "1"); */
       //produccion
       /* body.set('00N5e00000N8lnb', "1"); */
     }
 
-    this._salesforceService.saveVoluntary(body).subscribe((response) => {
+    this._salesforceService.saveVoluntaryBussines(body).subscribe((response) => {
       console.log(response);
+      this.alertaInscripcion();
     },
       error => {
         console.log(error);
+        this.alertaInscripcion();
       });
-    this.router.navigate(['/agendamiento/' + this.user.value.first_name + ' ' + this.user.value.last_name + '/' + this.user.value.email + '/' + this.user.value.rut + '/' + this.user.value.phoneNumber]);
+
+  }
+
+
+  alertaInscripcion() {
+    Swal.fire(
+      'Felicidades, te haz inscrito correctamente!',
+      'Pronto te contactaremos',
+      'success'
+    )
   }
 
 }

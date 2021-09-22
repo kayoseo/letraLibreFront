@@ -25,12 +25,11 @@ export class CalendlyComponent implements OnInit {
       this.email = params.email;
       this.rut=params.rut;
       this.phone=params.phone;
-      console.log("name"+this.name + " email: "+this.email);
     });
     //ignorar que no existe el modulo Calendly, este es cargado en index.html y por eso no lo detecta el compilador al pppio
     //@ts-ignore
     Calendly.initInlineWidget({
-      url: 'https://calendly.com/entrevistasletralibre/prueba',
+      url: 'https://calendly.com/entrevistasletralibre/entrevista-letra-libre',
       parentElement:document.querySelector('.calendly-inline-widget'),
       prefill: {
           name: this.name,

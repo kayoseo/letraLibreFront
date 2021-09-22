@@ -80,8 +80,8 @@
         <div class="col-sm-6 row">
           <label class="col-sm-5 col-form-label" for="birthday">Fecha de nacimiento:</label>
           <div class="col-sm-6">
-            <input (change)="formatFromDate($event.target.value)" class="form-control" matInput
-              [matDatepicker]="picker1" formControlName="birthday" autocomplete="off">
+            <input (keyup)="replaceGuion($event.target.value)" class="form-control" formControlName="birthday"
+              autocomplete="off">
             <div
               *ngIf="user.controls['birthday'].invalid && (user.controls['birthday'].dirty || user.controls['birthday'].touched)"
               class="alert alert-danger">
@@ -91,11 +91,10 @@
               <div *ngIf="user.controls['birthday'].errors.incorrect">
                 Menor de Edad
               </div>
+              <div *ngIf="user.controls['birthday'].errors.invalido">
+                Formato de fecha incorrecto. Ej: DD/MM/AAAA
+              </div>
             </div>
-          </div>
-          <div>
-            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-            <mat-datepicker #picker1></mat-datepicker>
           </div>
 
           <div style="text-align: center !important;">
@@ -439,34 +438,35 @@
         </div>
       </div>
       <div class="form-group row">
-       
-          <label class="col-sm-7 col-form-label" for="entryGroup">¿Con qué grupo ingresas a Letra Libre?
-            (universidad/empresa / agrupación):</label>
-          <div class="col-sm-3">
-            <mat-select id="entryGroup" name="entryGroup" formControlName="entryGroup" class="form-control"
-              matNativeControl>
-              <mat-option value="">--Ninguno--</mat-option>
-              <mat-option value="Anglo American">Anglo American</mat-option>
-              <mat-option value="Barros y Errázuriz">Barros y Errázuriz</mat-option>
-              <mat-option value="WOM">WOM</mat-option>
-              <mat-option value="Consorcio">Consorcio</mat-option>
-              <mat-option value="Abinbev">Abinbev</mat-option>
-              <mat-option value="Bodegas San Francisco">Bodegas San Francisco</mat-option>
-              <mat-option value="Mapfre">Mapfre</mat-option>
-              <mat-option value="Evalueserve">Evalueserve</mat-option>
-              <mat-option value="Corporación Futrono">Corporación Futrono</mat-option>
-              <mat-option value="UDEC">UDEC</mat-option>
-              <mat-option value="UC Campus Villarica">UC Campus Villarica</mat-option>
-            </mat-select>
-          </div>
-   
-       
+
+        <label class="col-sm-7 col-form-label" for="entryGroup">¿Con qué grupo ingresas a Letra Libre?
+          (universidad/empresa / agrupación):</label>
+        <div class="col-sm-3">
+          <mat-select id="entryGroup" name="entryGroup" formControlName="entryGroup" class="form-control"
+            matNativeControl>
+            <mat-option value="">--Ninguno--</mat-option>
+            <mat-option value="Anglo American">Anglo American</mat-option>
+            <mat-option value="Barros y Errázuriz">Barros y Errázuriz</mat-option>
+            <mat-option value="WOM">WOM</mat-option>
+            <mat-option value="Consorcio">Consorcio</mat-option>
+            <mat-option value="Abinbev">Abinbev</mat-option>
+            <mat-option value="Bodegas San Francisco">Bodegas San Francisco</mat-option>
+            <mat-option value="Mapfre">Mapfre</mat-option>
+            <mat-option value="Evalueserve">Evalueserve</mat-option>
+            <mat-option value="Corporación Futrono">Corporación Futrono</mat-option>
+            <mat-option value="UDEC">UDEC</mat-option>
+            <mat-option value="UC Campus Villarica">UC Campus Villarica</mat-option>
+            <mat-option value="IACC">IACC</mat-option>
+          </mat-select>
+        </div>
+
+
       </div>
       <div class="form-group row">
         <label class="col-sm-7 col-form-label" for="relationshipEntryGroup">¿Cuál tu relación con el grupo?:</label>
         <div class="col-sm-3">
-          <mat-select id="relationshipEntryGroup" name="relationshipEntryGroup" formControlName="relationshipEntryGroup" class="form-control"
-            matNativeControl>
+          <mat-select id="relationshipEntryGroup" name="relationshipEntryGroup" formControlName="relationshipEntryGroup"
+            class="form-control" matNativeControl>
             <mat-option value="">--Ninguno--</mat-option>
             <mat-option value="Funcionario">Funcionario</mat-option>
             <mat-option value="Familiar/amigo de funcionario">Familiar/amigo de funcionario</mat-option>

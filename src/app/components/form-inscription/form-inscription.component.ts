@@ -22,7 +22,7 @@ export class FormInscriptionComponent implements OnInit {
     private _countryPhoneNumbersService: CountryPhoneNumbersService, private _salesforceService: SalesforceService) {
     var patternMail = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$";
     this.user = this.formBuilder.group({
-      oid: [ environment.oid],
+      oid: [environment.oid],
       first_name: ['', Validators.required],
       last_name: ['', Validators.required],
       email: ['', [Validators.required, Validators.pattern(patternMail)]],
@@ -47,7 +47,7 @@ export class FormInscriptionComponent implements OnInit {
 
     });
 
-   
+
     this.countrys = [];
 
 
@@ -63,7 +63,6 @@ export class FormInscriptionComponent implements OnInit {
   }
 
   checkRut(rut) {
-    console.log("rut" + rut);
     // Despejar Puntos
     var rut = this.user.controls['rut'].value;
     var valor = rut.replace('.', '');
@@ -119,8 +118,7 @@ export class FormInscriptionComponent implements OnInit {
   }
 
   addCodeTelephone(callingCodes) {
-    if(this.user.controls.phoneNumber.value=="")
-    {
+    if (this.user.controls.phoneNumber.value == "") {
       this.user.controls.phoneNumber.setValue("+" + callingCodes);
     }
   }
@@ -128,9 +126,30 @@ export class FormInscriptionComponent implements OnInit {
   age() {
     var fecha = this.user.controls.birthday.value;
     var hoy = new Date();
-    var cumpleanos = new Date(fecha);
+    var fecha = fecha.split('/');
+    if (fecha[2]) {
+      if (fecha[2].length < 4 || fecha[2].length > 4) {
+        this.user.controls.birthday.setErrors({ 'invalido': true });
+        //asi evito que aparezca la otra validacion
+        return 18;
+      }
+    }
+    else {
+      this.user.controls.birthday.setErrors({ 'invalido': true });
+      //asi evito que aparezca la otra validacion
+      return 18;
+    }
+
+    var value = fecha[1] + "/" + fecha[0] + "/" + fecha[2];
+    var cumpleanos = new Date(value);
     var edad = hoy.getFullYear() - cumpleanos.getFullYear();
     var m = hoy.getMonth() - cumpleanos.getMonth();
+    console.log("cumpleaños", cumpleanos);
+    if (cumpleanos.toString() == "Invalid Date") {
+      this.user.controls.birthday.setErrors({ 'invalido': true });
+      //asi evito que aparezca la otra validacion
+      return 18;
+    }
 
     if (m < 0 || (m === 0 && hoy.getDate() < cumpleanos.getDate())) {
       edad--;
@@ -145,14 +164,24 @@ export class FormInscriptionComponent implements OnInit {
 ya que o sino el datepicker la considera como invalida y guarda un null */
   formatFromDate(value) {
     var date = value.split('/');
-    value = date[1] + "/" + date[0] + "/" + date[2];
-    this.user.controls['birthday'].setValue(new Date(value));
+    if (date.length == 3) {
+      value = date[1] + "/" + date[0] + "/" + date[2];
+      this.user.controls['birthday'].setValue(new Date(value));
+    }
 
+  }
+
+  replaceGuion(value) {
+    if (value.length == 2||value.length == 5) {
+      value = value + "/";
+    }
+    value = value.replace('-', '/');
+    this.user.controls['birthday'].setValue(value);
   }
 
 
   verificationEmail(value) {
-   /*  value = this.user.controls.emailRepeat.value; */
+    /*  value = this.user.controls.emailRepeat.value; */
     var email = this.user.controls.email.value;
     if (value != email) {
       this.user.controls.emailRepeat.setErrors({ 'incorrect': true });
@@ -170,7 +199,7 @@ ya que o sino el datepicker la considera como invalida y guarda un null */
   }
 
   submit() {
-    
+
 
     let body = new URLSearchParams();
     //test
@@ -190,7 +219,8 @@ ya que o sino el datepicker la considera como invalida y guarda un null */
     body.set('recordType', "Tutor");
     body.set('submit', "Enviar");
     body.set('debug', "1");
-/*     body.set('debugEmail', "juanromanmontes@gmail.com"); */
+    /*     body.set('debugEmail', ""); */
+    body.set('debugEmail', "felipe.ferreira@letralibre.cl");
 
 
     //no tengo rut chileno
@@ -205,13 +235,17 @@ ya que o sino el datepicker la considera como invalida y guarda un null */
     //produccion
     body.set('00N5e00000N8lnr', this.user.value.rut);
 
+
+    var fecha = this.user.value.birthday.split('/');
+    var value = fecha[1] + "/" + fecha[0] + "/" + fecha[2];
+    var cumpleanos = new Date(value);
     //test
     // body.set('00N2f000001Eimz',this.user.value.birthday);
     //produccion
-    body.set('00N5e00000N8lnh', moment(this.user.value.birthday).format("DD/MM/YYYY").toString());
+    body.set('00N5e00000N8lnh', moment(cumpleanos).format("DD/MM/YYYY").toString());
 
     //test
-  /*   body.set('00N2f000001EinE', this.user.value.occupation); */
+    /*   body.set('00N2f000001EinE', this.user.value.occupation); */
     //produccion
     body.set('00N5e00000N8lnn', this.user.value.occupation);
 
@@ -262,11 +296,13 @@ ya que o sino el datepicker la considera como invalida y guarda un null */
 
     this._salesforceService.saveVoluntary(body).subscribe((response) => {
       console.log(response);
+      this.router.navigate(['/agendamiento/' + this.user.value.first_name + ' ' + this.user.value.last_name + '/' + this.user.value.email + '/' + this.user.value.rut + '/' + this.user.value.phoneNumber]);
     },
       error => {
         console.log(error);
+        this.router.navigate(['/agendamiento/' + this.user.value.first_name + ' ' + this.user.value.last_name + '/' + this.user.value.email + '/' + this.user.value.rut + '/' + this.user.value.phoneNumber]);
       });
-    this.router.navigate(['/agendamiento/' + this.user.value.first_name + ' ' + this.user.value.last_name + '/' + this.user.value.email + '/' + this.user.value.rut+'/'+this.user.value.phoneNumber]);
+    
   }
 
 }
