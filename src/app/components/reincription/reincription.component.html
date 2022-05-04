@@ -1,0 +1,124 @@
+<div class="contenedor">
+  <!--  <img src="cid:cuadrados@kreata.ee" alt=""  style="position:fixed; background: white; margin: 0 auto;"> -->
+  <img class="logo" src="assets/BANNER.webp">
+  <div class="centrado">
+    <p style="color:#F1881B ; padding-left: 1rem;">¡Hola {{firstname}}!</p>
+    <p style="padding-left: 1rem; padding-right: 1rem !important; color:rgb(43,60,106);">Nos alegra mucho que quieras
+      volver a participar de las tutorías de nuestra fundación. Antes de continuar te pedimos que leas atentamente los
+      siguientes puntos y luego confirmes tu disponibilidad.
+    </p>
+    
+    <div style="padding-left: 1rem; padding-right: 1rem !important; color:rgb(43,60,106);">
+      - Para los tutores y tutoras 2021, habilitamos un sistema rápido de reinscripción, que no contará con
+      entrevistas.
+    </div>
+    <div style="padding-left: 1rem; padding-right: 1rem !important; color:rgb(43,60,106);">
+       - Al confirmar tu disponibilidad quedarás automáticamente listo para ser asignado a un estudiante. La
+      tutoría se realizará durante todo el año escolar 2022.
+    </div>
+    <div style="padding-left: 1rem; padding-right: 1rem !important; color:rgb(43,60,106);">
+      - Te llegará un mail dentro de los próximos minutos, confirmando que tu reinscripción se realizó
+      correctamente. Si no lo ves, busca en carpetas de Notificaciones, Promociones o Spam, si no te ha llegado, por
+      favor contáctanos al correo: tutores@letralibre.cl
+    </div>
+    <div style="padding-left: 1rem; padding-right: 1rem !important; color:rgb(43,60,106);">
+       - Los colegios están comenzando el año escolar, por lo que pasarán algunas semanas hasta que te podamos
+      asignar a tu coordinador/a y a tu estudiante. No te preocupes si no te contactan en los próximos días, si te
+      llegó el mail de confirmación, está todo listo para partir.
+    </div>
+
+    
+
+
+
+
+
+
+
+
+    <p style="padding-left: 1rem; padding-right: 1rem !important; color:rgb(43,60,106);"><br> Finalmente necesitamos que actualices algunos datos,
+      antes de continuar:
+    </p>
+
+    <form [formGroup]="user">
+      <div class="row" style="padding-left: 1rem; padding-right: 1rem !important;">
+        <div class="col">
+          <label for="phoneNumber" class="col-form-label">Telefóno:</label>
+          <input type="text" placeholder="+56" class="form-control" id="phoneNumber" name="phoneNumber" formControlName="phoneNumber" maxlength="15">
+        </div>
+        <div class="col">
+          <label for="genero" class="col-form-label">Género:</label>
+          <select class="form-control" id="genero" name="genero" formControlName="genero">
+            <option value="Femenino">Femenino</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+      </div>
+      <!-- <div class="row">
+        <div class="col">
+          <label for="pais" class="col-form-label">País:</label>
+          <select class="form-control" id="pais" name="pais" onchange="onChangePais()">
+          </select>
+        </div>
+        <div class="col" id="ciudadCol" style="display:none">
+          <label for="ciudad" class="col-form-label">Ciudad:</label>
+          <input type="text" class="form-control" id="ciudad" name="ciudad">
+        </div>
+        <div class="col" id="regionCol">
+          <label for="region" class="col-form-label">Región:</label>
+          <select class="form-control" id="region" name="region" onclick="onChangeRegion()">
+          </select>
+        </div>
+      </div>
+      <div class="row" id="comunaCol">
+        <div class="col-6">
+          <label for="comuna" class="col-form-label">Comuna:</label>
+          <select class="form-control" id="comuna" name="comuna">
+          </select>
+        </div> -->
+
+
+
+
+      <p style="padding-left: 1rem; padding-right: 1rem !important; color:rgb(43,60,106);"> <br>Te invitamos a postular
+        a ser coordinador/a de tutores si te interesa liderar un equipo como el que tuviste el año pasado. Si te
+        interesa saber más márcalo en la casilla.</p>
+
+
+      <div class="row" style="justify-content: center;"> 
+        <div class="col-6">
+          <select class="form-control" id="coordinador" name="coordinador" formControlName="coordinador" placeholder="¿Quieres ser coordinador?">
+            <option disabled selected value="">¿Quieres ser coordinador?</option>
+            <option value="Sí, quiero ser coordinador/a">Sí, quiero ser coordinador/a</option>
+            <option value="¡Cuéntenme más!">¡Cuéntenme más!</option>
+            <option value="No me interesa">No me interesa</option>
+          </select>
+        </div>
+      </div>
+
+      <p style="padding-left: 1rem; padding-right: 1rem !important; color:rgb(43,60,106);"> <br> <br> ¿Confirmas tu reinscripción, y los datos que has ingresado?</p>
+      <section style="padding-left: 1rem; padding-right: 1rem !important;">
+        <div class="example-button-row">
+          <div class="example-flex-container">
+            <div class="example-button-container">
+              <button type="button" class="btn-volver" mat-button (click)="cancelo('No')">
+                Cancelar reinscripción
+              </button>
+            </div>
+            <div class="example-button-container">
+              <button  mat-button type="button" id="btn-success" (click)="continuo('Si')">
+                Sí, confirmo
+              </button>
+            </div>
+          </div>
+        </div>
+    </section>
+  
+    </form>
+
+
+
+  </div>
+</div>
+

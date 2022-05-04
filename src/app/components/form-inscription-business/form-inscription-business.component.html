@@ -1,6 +1,6 @@
-<div>
+<div style="margin-bottom: 20px !important;">
   <div>
-    <img src="assets/BANNER.webp" alt="WebP rules.">
+  <!--   <img src="assets/BANNER.webp" alt="WebP rules."> -->
     <form [formGroup]="user" class="mt-5 container">
 
       <div class="form-group row">
@@ -105,7 +105,7 @@
           </div>
         </div>
         <div class="col-sm-6 row">
-          <label class="col-sm-5 col-form-label" for="phoneNumber">Telefóno:</label>
+          <label class="col-sm-5 col-form-label" for="phoneNumber">Teléfono:</label>
           <div class="col-sm-6">
             <input type="text" placeholder="+56" class="form-control" id="phoneNumber" formControlName="phoneNumber"
               maxlength="15" required>
@@ -131,7 +131,7 @@
         <div class="col-sm-6 row">
           <label class="col-sm-5 col-form-label" for="email">Correo electrónico:</label>
           <div class="col-sm-6">
-            <input type="text" class="form-control" id="email" formControlName="email" required>
+            <input (keyup)="removeSpace($event.target.value)" type="text" class="form-control" id="email" formControlName="email" required>
             <div
               *ngIf="user.controls['email'].invalid && (user.controls['email'].dirty || user.controls['email'].touched)"
               class="alert alert-danger">
@@ -168,13 +168,14 @@
       </div>
 
 
+      
       <div class="form-group row">
         <div class="col-sm-6 row">
           <label class="col-sm-5 col-form-label" for="country">País:</label>
           <div class="col-sm-6">
             <mat-select class="form-control" matNativeControl id="country" name="country" formControlName="country">
-              <mat-option (click)="addCodeTelephone(country.callingCodes)" *ngFor="let country of countrys"
-                [value]="country.name">{{country.name}}</mat-option>
+              <mat-option (click)="addCodeTelephone(country.phone_code)" *ngFor="let country of countrys"
+                [value]="country.nombre">{{country.nombre}}</mat-option>
             </mat-select>
             <div
               *ngIf="user.controls['country'].invalid && (user.controls['country'].dirty || user.controls['country'].touched)"
@@ -185,10 +186,11 @@
             </div>
           </div>
         </div>
-        <div class="col-sm-6 row">
+
+        <div class="col-sm-6 row" *ngIf="user.controls['country'].value!!='Chile'">
           <label class="col-sm-5 col-form-label" for="city">Ciudad:</label>
           <div class="col-sm-6">
-            <input type="text" class="form-control" id="city" formControlName="city" required>
+            <input type="text" class="form-control" id="city" formControlName="city" >
             <div *ngIf="user.controls['city'].invalid && (user.controls['city'].dirty || user.controls['city'].touched)"
               class="alert alert-danger">
               <div *ngIf="user.controls['city'].errors.required">
@@ -197,6 +199,56 @@
             </div>
           </div>
         </div>
+        <div class="col-sm-6 row" *ngIf="user.controls['country'].value=='Chile'">
+          <label class="col-sm-5 col-form-label" for="region">Región:</label>
+          <div class="col-sm-6">
+            <mat-select class="form-control" matNativeControl id="region" name="region" formControlName="region">
+              <mat-option (click)="addComunas(region.comunas)" *ngFor="let region of comunas_regiones"
+                [value]="region.region">{{region.region}}</mat-option>
+            </mat-select>
+            <div *ngIf="user.controls['region'].invalid && (user.controls['region'].dirty || user.controls['region'].touched)"
+              class="alert alert-danger">
+              <div *ngIf="user.controls['region'].errors.required">
+                Región es requerida.
+              </div>
+            </div>
+          </div>
+      
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-6 row">
+          <label class="col-sm-5 col-form-label" for="genero">Género:</label>
+          <div class="col-sm-6">
+            <mat-select class="form-control" matNativeControl id="genero" name="genero" formControlName="genero">
+              <mat-option value="Femenino">Femenino</mat-option>
+              <mat-option value="Masculino">Masculino</mat-option>
+              <mat-option value="Otro">Otro</mat-option>
+            </mat-select>
+            <div *ngIf="user.controls['genero'].invalid && (user.controls['genero'].dirty || user.controls['genero'].touched)"
+              class="alert alert-danger">
+              <div *ngIf="user.controls['genero'].errors.required">
+                Genero es requerido.
+              </div>
+            </div>
+          </div>
+          </div>
+        <div class="col-sm-6 row" *ngIf="user.controls['country'].value=='Chile'">
+        <label class="col-sm-5 col-form-label" for="comunas">Comuna:</label>
+        <div class="col-sm-6">
+          <mat-select class="form-control" matNativeControl id="comuna" name="comuna" formControlName="comuna">
+            <mat-option *ngFor="let comuna of comunas"
+              [value]="comuna">{{comuna}}</mat-option>
+          </mat-select>
+          <div *ngIf="user.controls['comuna'].invalid && (user.controls['comuna'].dirty || user.controls['comuna'].touched)"
+            class="alert alert-danger">
+            <div *ngIf="user.controls['comuna'].errors.required">
+              Comuna es requerida.
+            </div>
+          </div>
+        </div>
+      </div>
       </div>
 
       <div class="form-group row">
@@ -205,8 +257,8 @@
           <div class="col-sm-6">
             <mat-select id="occupation" name="occupation" formControlName="occupation" class="form-control"
               matNativeControl>
-              <mat-option value="">--Ninguno--</mat-option>
-              <mat-option value="No aplica">No aplica</mat-option>
+              <mat-option value="">Seleccionar</mat-option>
+              <mat-option value="Ninguno">Ninguno</mat-option>
               <mat-option value="Dueña/o de casa">Dueña/o de casa</mat-option>
               <mat-option value="Actuación">Actuación</mat-option>
               <mat-option value="Administración">Administración</mat-option>
@@ -302,73 +354,71 @@
           <label class="col-sm-5 col-form-label" for="studyHouse">Casa de estudio:</label>
           <div class="col-sm-6">
             <mat-select id="studyHouse" name="studyHouse" formControlName="studyHouse" class="form-control"
-              matNativeControl>
-              <mat-option value="">--Ninguno--</mat-option>
-              <mat-option value="No Aplica">No Aplica</mat-option>
-              <mat-option value="Fuerzas Armadas y de Orden">Fuerzas Armadas y de Orden</mat-option>
-              <mat-option value="DUOC UC">DUOC UC</mat-option>
-              <mat-option value="INACAP">INACAP</mat-option>
-              <mat-option value="UCINF">UCINF</mat-option>
-              <mat-option value="UMCE">UMCE</mat-option>
-              <mat-option value="UNIACC">UNIACC</mat-option>
-              <mat-option value="UNICIT">UNICIT</mat-option>
-              <mat-option value="Universidad Adolfo Ibánez">Universidad Adolfo Ibánez</mat-option>
-              <mat-option value="Universidad Adventista de Chile">Universidad Adventista de Chile</mat-option>
-              <mat-option value="Universidad Alberto Hurtado">Universidad Alberto Hurtado</mat-option>
-              <mat-option value="Universidad Andrés Bello">Universidad Andrés Bello</mat-option>
-              <mat-option value="Universidad de Aconcagua">Universidad de Aconcagua</mat-option>
-              <mat-option value="Universidad Arcis">Universidad Arcis</mat-option>
-              <mat-option value="Universidad Arturo Prat">Universidad Arturo Prat</mat-option>
-              <mat-option value="Universidad Austral de Chile">Universidad Austral de Chile</mat-option>
-              <mat-option value="Universidad Autónoma de Chile">Universidad Autónoma de Chile</mat-option>
-              <mat-option value="Universidad Bernardo O&#39;higgins">Universidad Bernardo O&#39;higgins</mat-option>
-              <mat-option value="Universidad Bolivariana">Universidad Bolivariana</mat-option>
-              <mat-option value="Universidad Católica de Chile">Universidad Católica de Chile</mat-option>
-              <mat-option value="Universidad Católica de la Santísima Concepción">Universidad Católica de la Santísima
-                Concepción</mat-option>
-              <mat-option value="Universidad Católica de Temuco">Universidad Católica de Temuco</mat-option>
-              <mat-option value="Universidad Católica de Valparaíso">Universidad Católica de Valparaíso</mat-option>
-              <mat-option value="Universidad Católica del Norte">Universidad Católica del Norte</mat-option>
-              <mat-option value="Universidad Católica del Maule">Universidad Católica del Maule</mat-option>
-              <mat-option value="Universidad Católica Silva Henriquez">Universidad Católica Silva Henriquez</mat-option>
-              <mat-option value="Universidad Central de Chile">Universidad Central de Chile</mat-option>
-              <mat-option value="Universidad de Antofagasta">Universidad de Antofagasta</mat-option>
-              <mat-option value="Universidad de Atacama">Universidad de Atacama</mat-option>
-              <mat-option value="Universidad de Chile">Universidad de Chile</mat-option>
-              <mat-option value="Universidad de Concepción">Universidad de Concepción</mat-option>
-              <mat-option value="Universidad de La Frontera">Universidad de La Frontera</mat-option>
-              <mat-option value="Universidad de La Serena">Universidad de La Serena</mat-option>
-              <mat-option value="Universidad de Las Américas">Universidad de Las Américas</mat-option>
-              <mat-option value="Universidad de Los Andes">Universidad de Los Andes</mat-option>
-              <mat-option value="Universidad de Los Lagos">Universidad de Los Lagos</mat-option>
-              <mat-option value="Universidad de Magallanes">Universidad de Magallanes</mat-option>
-              <mat-option value="Universidad de Playa Ancha">Universidad de Playa Ancha</mat-option>
-              <mat-option value="Universidad de Talca">Universidad de Talca</mat-option>
-              <mat-option value="Universidad de Tarapacá">Universidad de Tarapacá</mat-option>
-              <mat-option value="Universidad de Valparaiso">Universidad de Valparaiso</mat-option>
-              <mat-option value="Universidad del Bio-Bio">Universidad del Bio-Bio</mat-option>
-              <mat-option value="Universidad del Desarrollo">Universidad del Desarrollo</mat-option>
-              <mat-option value="Universidad del Pacífico">Universidad del Pacífico</mat-option>
-              <mat-option value="Universidad Diego Portales">Universidad Diego Portales</mat-option>
-              <mat-option value="Universidad Finis Terrae">Universidad Finis Terrae</mat-option>
-              <mat-option value="Universidad Gabriela Mistral">Universidad Gabriela Mistral</mat-option>
-              <mat-option value="Universidad Internacional SEK">Universidad Internacional SEK</mat-option>
-              <mat-option value="Universidad José Santos Ossa">Universidad José Santos Ossa</mat-option>
-              <mat-option value="Universidad La República">Universidad La República</mat-option>
-              <mat-option value="Universidad Mariano Egaña">Universidad Mariano Egaña</mat-option>
-              <mat-option value="Universidad Marítima de Chile">Universidad Marítima de Chile</mat-option>
-              <mat-option value="Universidad Mayor">Universidad Mayor</mat-option>
-              <mat-option value="Universidad Miguel de Cervantes">Universidad Miguel de Cervantes</mat-option>
-              <mat-option value="Universidad San Sebastián">Universidad San Sebastián</mat-option>
-              <mat-option value="Universidad Santo Tomás">Universidad Santo Tomás</mat-option>
-              <mat-option value="Universidad Técnica Federico Santa María">Universidad Técnica Federico Santa María
-              </mat-option>
-              <mat-option value="Universidad Vicente Perez Rosales">Universidad Vicente Perez Rosales</mat-option>
-              <mat-option value="Universidad Viña del Mar">Universidad Viña del Mar</mat-option>
-              <mat-option value="USACH">USACH</mat-option>
-              <mat-option value="UTEM">UTEM</mat-option>
-              <mat-option value="Otra">Otra</mat-option>
-            </mat-select>
+            matNativeControl>
+            <mat-option value="">Seleccionar</mat-option>
+            <mat-option value="Ninguno">Ninguno</mat-option>
+            <mat-option value="DUOC UC">DUOC UC</mat-option>
+            <mat-option value="Fuerzas Armadas y de Orden">Fuerzas Armadas y de Orden</mat-option>
+            <mat-option value="INACAP">INACAP</mat-option>
+            <mat-option value="UCINF">UCINF</mat-option>
+            <mat-option value="UMCE">UMCE</mat-option>
+            <mat-option value="UNIACC">UNIACC</mat-option>
+            <mat-option value="UNICIT">UNICIT</mat-option>
+            <mat-option value="USACH">USACH</mat-option>
+            <mat-option value="UTEM">UTEM</mat-option>
+            <mat-option value="Universidad Adolfo Ibánez">Universidad Adolfo Ibánez</mat-option>
+            <mat-option value="Universidad Adventista de Chile">Universidad Adventista de Chile</mat-option>
+            <mat-option value="Universidad Alberto Hurtado">Universidad Alberto Hurtado</mat-option>
+            <mat-option value="Universidad Andrés Bello">Universidad Andrés Bello</mat-option>
+            <mat-option value="Universidad Arcis">Universidad Arcis</mat-option>
+            <mat-option value="Universidad Arturo Prat">Universidad Arturo Prat</mat-option>
+            <mat-option value="Universidad Austral de Chile">Universidad Austral de Chile</mat-option>
+            <mat-option value="Universidad Autónoma de Chile">Universidad Autónoma de Chile</mat-option>
+            <mat-option value='Universidad Bernardo O"higgins'>Universidad Bernardo O"higgins</mat-option>
+            <mat-option value="Universidad Bolivariana">Universidad Bolivariana</mat-option>
+            <mat-option value="Universidad Católica de Chile">Universidad Católica de Chile</mat-option>
+            <mat-option value="Universidad Católica de la Santísima Concepción">Universidad Católica de la Santísima Concepción</mat-option>
+            <mat-option value="Universidad Católica de Temuco">Universidad Católica de Temuco</mat-option>
+            <mat-option value="Universidad Católica de Valparaíso">Universidad Católica de Valparaíso</mat-option>
+            <mat-option value="Universidad Católica del Maule">Universidad Católica del Maule</mat-option>
+            <mat-option value="Universidad Católica del Norte">Universidad Católica del Norte</mat-option>
+            <mat-option value="Universidad Católica Silva Henriquez">Universidad Católica Silva Henriquez</mat-option>
+            <mat-option value="Universidad Central de Chile">Universidad Central de Chile</mat-option>
+            <mat-option value="Universidad de Aconcagua">Universidad de Aconcagua</mat-option>
+            <mat-option value="Universidad de Antofagasta">Universidad de Antofagasta</mat-option>
+            <mat-option value="Universidad de Atacama">Universidad de Atacama</mat-option>
+            <mat-option value="Universidad de Chile">Universidad de Chile</mat-option>
+            <mat-option value="Universidad de Concepción">Universidad de Concepción</mat-option>
+            <mat-option value="Universidad de La Frontera">Universidad de La Frontera</mat-option>
+            <mat-option value="Universidad de La Serena">Universidad de La Serena</mat-option>
+            <mat-option value="Universidad de Las Américas">Universidad de Las Américas</mat-option>
+            <mat-option value="Universidad de Los Andes">Universidad de Los Andes</mat-option>
+            <mat-option value="Universidad de Los Lagos">Universidad de Los Lagos</mat-option>
+            <mat-option value="Universidad de Magallanes">Universidad de Magallanes</mat-option>
+            <mat-option value="Universidad de Playa Ancha">Universidad de Playa Ancha</mat-option>
+            <mat-option value="Universidad de Talca">Universidad de Talca</mat-option>
+            <mat-option value="Universidad de Tarapacá">Universidad de Tarapacá</mat-option>
+            <mat-option value="Universidad de Valparaiso">Universidad de Valparaiso</mat-option>
+            <mat-option value="Universidad del Bio-Bio">Universidad del Bio-Bio</mat-option>
+            <mat-option value="Universidad del Desarrollo">Universidad del Desarrollo</mat-option>
+            <mat-option value="Universidad del Pacífico">Universidad del Pacífico</mat-option>
+            <mat-option value="Universidad Diego Portales">Universidad Diego Portales</mat-option>
+            <mat-option value="Universidad Finis Terrae">Universidad Finis Terrae</mat-option>
+            <mat-option value="Universidad Gabriela Mistral">Universidad Gabriela Mistral</mat-option>
+            <mat-option value="Universidad Internacional SEK">Universidad Internacional SEK</mat-option>
+            <mat-option value="Universidad José Santos Ossa">Universidad José Santos Ossa</mat-option>
+            <mat-option value="Universidad La República">Universidad La República</mat-option>
+            <mat-option value="Universidad Mariano Egaña">Universidad Mariano Egaña</mat-option>
+            <mat-option value="Universidad Marítima de Chile">Universidad Marítima de Chile</mat-option>
+            <mat-option value="Universidad Mayor">Universidad Mayor</mat-option>
+            <mat-option value="Universidad Miguel de Cervantes">Universidad Miguel de Cervantes</mat-option>
+            <mat-option value="Universidad San Sebastián">Universidad San Sebastián</mat-option>
+            <mat-option value="Universidad Santo Tomás">Universidad Santo Tomás</mat-option>
+            <mat-option value="Universidad Técnica Federico Santa María">Universidad Técnica Federico Santa María</mat-option>
+            <mat-option value="Universidad Vicente Perez Rosales">Universidad Vicente Perez Rosales</mat-option>
+            <mat-option value="Universidad Viña del Mar">Universidad Viña del Mar</mat-option>
+            <mat-option value="Otra">Otra</mat-option>
+          </mat-select>
             <div
               *ngIf="user.controls['studyHouse'].invalid && (user.controls['studyHouse'].dirty || user.controls['studyHouse'].touched)"
               class="alert alert-danger">
@@ -394,13 +444,19 @@
         <!--         <label *ngIf="user.controls['hasPreviousExperience'].value" class="col-sm-2 col-form-label"
             for="previousExperience">Cuéntanos brevemente tu experiencia::</label> -->
         <div class="col-sm-10" *ngIf="user.controls['hasPreviousExperience'].value">
-          <textarea type="text" class="form-control" id="previousExperience"
-            placeholder="Cuéntanos brevemente tu experiencia..." formControlName="previousExperience"></textarea>
+          <mat-select class="form-control" id="previousExperience" placeholder="¿Qué tipo de experiencia tienes?"
+          formControlName="previousExperience" matNativeControl>
+          <mat-option value="Estudiantes de educación básica">Estudiantes de educación básica</mat-option>
+          <mat-option value="Estudiantes de enseñanza media">Estudiantes de enseñanza media</mat-option>
+          <mat-option value="Estudiantes adultos">Estudiantes adultos</mat-option>
+          <mat-option value="Estudiantes con dificultades de aprendizaje">Estudiantes con dificultades de aprendizaje
+          </mat-option>
+          <mat-option value="Hijos, familiares u otros">Hijos, familiares u otros</mat-option>
+        </mat-select>
         </div>
       </div>
       <div class="form-group row">
-        <label class="col-sm-6 col-form-label" for="reasonForAplication">¿Por qué quieres postular al proyecto de
-          Tutorías Letra Libre 2021?</label>
+        <label class="col-sm-6 col-form-label" for="reasonForAplication">¿Por qué quieres ser Tutor de Letra Libre?</label>
         <div class="col-sm-10">
           <textarea class="form-control" type="text" id="reasonForAplication" placeholder=""
             formControlName="reasonForAplication" required rows="2"></textarea>
@@ -418,13 +474,16 @@
         <div class="col-sm-3">
           <mat-select id="candidateOrigin" name="candidateOrigin" formControlName="candidateOrigin" class="form-control"
             matNativeControl>
-            <mat-option value="">--Ninguno--</mat-option>
+            <mat-option value="">Seleccionar</mat-option>
+            <mat-option value="Por mi empresa/organización">Por mi empresa/organización</mat-option>
             <mat-option value="Me llegó por Whatsapp">Me llegó por Whatsapp</mat-option>
             <mat-option value="Instagram">Instagram</mat-option>
             <mat-option value="Facebook">Facebook</mat-option>
             <mat-option value="Twitter">Twitter</mat-option>
             <mat-option value="Prensa">Prensa</mat-option>
-            <mat-option value="Radio - TV">Radio - TV</mat-option>
+            <mat-option value="Radio">Radio</mat-option>
+            <mat-option value="TV">TV</mat-option>
+            <mat-option value="Metro">Metro</mat-option>
             <mat-option value="Me contó un amigo o familiar">Me contó un amigo o familiar</mat-option>
             <mat-option value="Otro">Otro</mat-option>
           </mat-select>
@@ -440,36 +499,46 @@
       <div class="form-group row">
 
         <label class="col-sm-7 col-form-label" for="entryGroup">¿Con qué grupo ingresas a Letra Libre?
-          (universidad/empresa / agrupación):</label>
+          (universidad/empresa/agrupación):</label>
         <div class="col-sm-3">
           <mat-select id="entryGroup" name="entryGroup" formControlName="entryGroup" class="form-control"
             matNativeControl>
-            <mat-option value="">--Ninguno--</mat-option>
+            <mat-option value="">Seleccionar</mat-option>
+            <mat-option value="Abinbev">Abinbev</mat-option>
             <mat-option value="Anglo American">Anglo American</mat-option>
             <mat-option value="Barros y Errázuriz">Barros y Errázuriz</mat-option>
-            <mat-option value="WOM">WOM</mat-option>
-            <mat-option value="Consorcio">Consorcio</mat-option>
-            <mat-option value="Abinbev">Abinbev</mat-option>
+            <mat-option value="Belen Educa">Belén Educa</mat-option>
             <mat-option value="Bodegas San Francisco">Bodegas San Francisco</mat-option>
-            <mat-option value="Mapfre">Mapfre</mat-option>
-            <mat-option value="Evalueserve">Evalueserve</mat-option>
+            <mat-option value="Consorcio">Consorcio</mat-option>
             <mat-option value="Corporación Futrono">Corporación Futrono</mat-option>
-            <mat-option value="UDEC">UDEC</mat-option>
-            <mat-option value="UC Campus Villarica">UC Campus Villarica</mat-option>
+            <mat-option value="DEP">DEP</mat-option>
+            <mat-option value="Entel">Entel</mat-option>
+            <mat-option value="Evalueserve">Evalueserve</mat-option>
+            <mat-option value="Falabella">Falabella</mat-option>
+            <mat-option value="Gtd">Gtd</mat-option>
             <mat-option value="IACC">IACC</mat-option>
+            <mat-option value="Inacap">Inacap</mat-option>
+            <mat-option value="Mapfre">Mapfre</mat-option>
+            <mat-option value="Soprole">Soprole</mat-option>
+            <mat-option value="Santander">Santander</mat-option>
+            <mat-option value="UC Campus Villarica">UC Campus Villarica</mat-option>
+            <mat-option value="UDEC">UDEC</mat-option>
+            <mat-option value="WOM">WOM</mat-option>
+            <mat-option value="Otro">Otro</mat-option>
           </mat-select>
         </div>
 
 
       </div>
       <div class="form-group row">
-        <label class="col-sm-7 col-form-label" for="relationshipEntryGroup">¿Cuál tu relación con el grupo?:</label>
+        <label class="col-sm-7 col-form-label" for="relationshipEntryGroup">¿Cuál es tu relación con el grupo?:</label>
         <div class="col-sm-3">
           <mat-select id="relationshipEntryGroup" name="relationshipEntryGroup" formControlName="relationshipEntryGroup"
             class="form-control" matNativeControl>
-            <mat-option value="">--Ninguno--</mat-option>
+            <mat-option value="">Seleccionar</mat-option>
             <mat-option value="Funcionario">Funcionario</mat-option>
             <mat-option value="Familiar/amigo de funcionario">Familiar/amigo de funcionario</mat-option>
+            <mat-option value="Practicante">Practicante</mat-option>
           </mat-select>
         </div>
       </div>
@@ -477,9 +546,7 @@
         <label for="applicationCommitment" class="headCompromise col-sm-12 col-form-label ml-2">Al postular a Letra
           Libre:</label>
 
-        <p class="col-12 ml-2 ">Me comprometo a acompañar a una niña o un niño durante
-          el segundo semestre escolar, finalizando en diciembre
-          2021.<br /> <br />
+        <p class="col-12 ml-2 ">Me comprometo a acompañar a una niña o un niño durante el año escolar 2022.<br /> <br />
           Estoy dispuesto/a a enfrentar este desafío con compromiso, flexibilidad y motivación.<br /><br />
           Mi motivación es que ningún niño o niña en Chile se quede sin aprender a leer y escribir. </p>
         <mat-checkbox (keyup)="reviewCommitment()" id="applicationCommitment" formControlName="applicationCommitment"

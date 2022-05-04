@@ -14,6 +14,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { CalendlyComponent } from './components/calendly/calendly.component';
 import { FormInscriptionBusinessComponent } from './components/form-inscription-business/form-inscription-business.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
+import { ReincriptionComponent } from './components/reincription/reincription.component';
+import { CalendlyBusinessComponent } from './components/calendly-business/calendly-business.component';
 registerLocaleData(localeEs,'es');
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ registerLocaleData(localeEs,'es');
     FormInscriptionComponent,
     CalendlyComponent,
     FormInscriptionBusinessComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    ReincriptionComponent,
+    CalendlyBusinessComponent
   ],
   imports: [
     BrowserModule,
